@@ -53,10 +53,11 @@
 						"type": "DatasetReference"
 					},
 					"fieldList": [
-						"lastModified"
+						"exists"
 					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					}
 				}
