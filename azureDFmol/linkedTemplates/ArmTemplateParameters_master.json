@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "azureDFmol"
 		},
+		"AzureDatabricksLinkedService_accessToken": {
+			"value": ""
+		},
 		"AzureStorageLinkedService_accountKey": {
 			"value": ""
 		},
