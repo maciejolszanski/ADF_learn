@@ -204,7 +204,7 @@
 							"notebookPath": "/Users/olszanskimaciej@wp.pl/adf_pipeline",
 							"baseParameters": {
 								"input": {
-									"value": "@activity('Get Metadata1').output",
+									"value": "@pipeline().parameters.name",
 									"type": "Expression"
 								}
 							}
@@ -246,6 +246,12 @@
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
+				},
+				"parameters": {
+					"name": {
+						"type": "string",
+						"defaultValue": "test"
+					}
 				},
 				"annotations": []
 			},
