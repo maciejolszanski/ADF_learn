@@ -1,0 +1,41 @@
+{
+	"name": "delays_raw",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureStorageLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "rawData/delays",
+				"fileSystem": "data"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "date",
+				"type": "INT32"
+			},
+			{
+				"name": "delay",
+				"type": "INT32"
+			},
+			{
+				"name": "distance",
+				"type": "INT32"
+			},
+			{
+				"name": "origin",
+				"type": "UTF8"
+			},
+			{
+				"name": "destination",
+				"type": "UTF8"
+			}
+		]
+	}
+}
