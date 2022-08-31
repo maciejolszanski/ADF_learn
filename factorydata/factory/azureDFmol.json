@@ -1,0 +1,9 @@
+{
+	"name": "azureDFmol",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "74931264-875f-4e86-8926-94b33d4b1688",
+		"tenantId": "4a681671-4dac-45a0-be41-c728de7b19fb"
+	}
+}
