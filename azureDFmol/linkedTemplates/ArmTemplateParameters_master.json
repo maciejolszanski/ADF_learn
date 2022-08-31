@@ -11,6 +11,9 @@
 		"AzureStorageLinkedService_accountKey": {
 			"value": ""
 		},
+		"AzureDatabricksLinkedService_properties_typeProperties_existingClusterId": {
+			"value": "0831-104038-88q0a2qf"
+		},
 		"AzureStorageLinkedService_properties_typeProperties_url": {
 			"value": "https://adfmolstorage.dfs.core.windows.net/"
 		},

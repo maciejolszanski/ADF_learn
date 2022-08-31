@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureStorageLinkedService'"
 		},
+		"AzureDatabricksLinkedService_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0831-104038-88q0a2qf"
+		},
 		"AzureStorageLinkedService_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://adfmolstorage.dfs.core.windows.net/"
@@ -51,6 +55,9 @@
 					},
 					"AzureStorageLinkedService_accountKey": {
 						"value": "[parameters('AzureStorageLinkedService_accountKey')]"
+					},
+					"AzureDatabricksLinkedService_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('AzureDatabricksLinkedService_properties_typeProperties_existingClusterId')]"
 					},
 					"AzureStorageLinkedService_properties_typeProperties_url": {
 						"value": "[parameters('AzureStorageLinkedService_properties_typeProperties_url')]"
