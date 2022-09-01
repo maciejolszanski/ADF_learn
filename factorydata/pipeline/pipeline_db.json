@@ -228,7 +228,7 @@
 			}
 		],
 		"parameters": {
-			"input": {
+			"name": {
 				"type": "string",
 				"defaultValue": "test"
 			}
