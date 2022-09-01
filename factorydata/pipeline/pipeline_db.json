@@ -1,17 +1,11 @@
 {
-	"name": "pipeline1",
+	"name": "pipeline_db",
 	"properties": {
 		"activities": [
 			{
 				"name": "join",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
-					{
-						"activity": "Copy delays",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
 					{
 						"activity": "Copy codes",
 						"dependencyConditions": [
@@ -68,7 +62,8 @@
 					"dataset": {
 						"referenceName": "deltaLake_delays",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			},
 			{
@@ -141,7 +136,14 @@
 			{
 				"name": "Copy codes",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Copy delays",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -224,7 +226,7 @@
 			}
 		],
 		"parameters": {
-			"name": {
+			"input": {
 				"type": "string",
 				"defaultValue": "test"
 			}
