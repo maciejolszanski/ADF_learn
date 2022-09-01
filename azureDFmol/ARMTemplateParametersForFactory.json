@@ -11,6 +11,9 @@
 		"AzureStorageLinkedService_accountKey": {
 			"value": ""
 		},
+		"DeltaLakeLinkedService_accessToken": {
+			"value": ""
+		},
 		"AzureDatabricksLinkedService_properties_typeProperties_existingClusterId": {
 			"value": "0831-104038-88q0a2qf"
 		},

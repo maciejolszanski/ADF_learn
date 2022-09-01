@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureStorageLinkedService'"
 		},
+		"DeltaLakeLinkedService_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'DeltaLakeLinkedService'"
+		},
 		"AzureDatabricksLinkedService_properties_typeProperties_existingClusterId": {
 			"type": "string",
 			"defaultValue": "0831-104038-88q0a2qf"
@@ -55,6 +59,9 @@
 					},
 					"AzureStorageLinkedService_accountKey": {
 						"value": "[parameters('AzureStorageLinkedService_accountKey')]"
+					},
+					"DeltaLakeLinkedService_accessToken": {
+						"value": "[parameters('DeltaLakeLinkedService_accessToken')]"
 					},
 					"AzureDatabricksLinkedService_properties_typeProperties_existingClusterId": {
 						"value": "[parameters('AzureDatabricksLinkedService_properties_typeProperties_existingClusterId')]"
