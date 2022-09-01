@@ -681,6 +681,7 @@
 						"     joinType:'left',",
 						"     matchType:'exact',",
 						"     ignoreSpaces: false,",
+						"     partitionBy('hash', 1),",
 						"     broadcast: 'auto')~> join1",
 						"join1 aggregate(groupBy(State),",
 						"     avgDelays = avg(delay)) ~> aggregate1",
