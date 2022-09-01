@@ -86,6 +86,31 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Parquet1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureStorageLinkedService",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "test",
+						"fileSystem": "data"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureStorageLinkedService')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/codes_raw')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -348,9 +373,105 @@
 			"properties": {
 				"activities": [
 					{
+						"name": "Copy codes",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": false,
+									"wildcardFileName": "*.parquet",
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "AzureDatabricksDeltaLakeSink",
+								"importSettings": {
+									"type": "AzureDatabricksDeltaLakeImportCommand"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "codes_raw",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "deltaLake_codes",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Copy delays",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": false,
+									"wildcardFileName": "*.parquet",
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "AzureDatabricksDeltaLakeSink",
+								"importSettings": {
+									"type": "AzureDatabricksDeltaLakeImportCommand"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "delays_raw",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "deltaLake_delays",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
 						"name": "join",
 						"type": "DatabricksNotebook",
 						"dependsOn": [
+							{
+								"activity": "Copy delays",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
 							{
 								"activity": "Copy codes",
 								"dependencyConditions": [
@@ -367,13 +488,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"notebookPath": "/Users/olszanskimaciej@wp.pl/adf_pipeline",
-							"baseParameters": {
-								"input": {
-									"value": "@pipeline().parameters.name",
-									"type": "Expression"
-								}
-							}
+							"notebookPath": "/Users/olszanskimaciej@wp.pl/adf_pipeline"
 						},
 						"linkedServiceName": {
 							"referenceName": "AzureDatabricksLinkedService",
@@ -381,40 +496,8 @@
 						}
 					},
 					{
-						"name": "Lookup1",
-						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "join",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureDatabricksDeltaLakeSource",
-								"query": "SELECT COUNT(*) FROM avg_delays"
-							},
-							"dataset": {
-								"referenceName": "deltaLake_delays",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
 						"name": "If Condition1",
-						"description": "@activity('Lookup 1').output >1",
+						"description": "",
 						"type": "IfCondition",
 						"dependsOn": [
 							{
@@ -427,7 +510,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"expression": {
-								"value": "@activity('Lookup1').output >1",
+								"value": "@greaterOrEquals(activity('Lookup1').output,1)",
 								"type": "Expression"
 							},
 							"ifTrueActivities": [
@@ -482,11 +565,11 @@
 						}
 					},
 					{
-						"name": "Copy codes",
-						"type": "Copy",
+						"name": "Lookup1",
+						"type": "Lookup",
 						"dependsOn": [
 							{
-								"activity": "Copy delays",
+								"activity": "join",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -502,101 +585,30 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "ParquetSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": false,
-									"wildcardFileName": "*",
-									"enablePartitionDiscovery": false
-								}
+								"type": "AzureDatabricksDeltaLakeSource",
+								"query": "SELECT COUNT(*) FROM codes"
 							},
-							"sink": {
-								"type": "AzureDatabricksDeltaLakeSink",
-								"importSettings": {
-									"type": "AzureDatabricksDeltaLakeImportCommand"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "codes_raw",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "deltaLake_codes",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Copy delays",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "ParquetSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": false,
-									"wildcardFileName": "*",
-									"enablePartitionDiscovery": false
-								}
-							},
-							"sink": {
-								"type": "AzureDatabricksDeltaLakeSink",
-								"importSettings": {
-									"type": "AzureDatabricksDeltaLakeImportCommand"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "delays_raw",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
+							"dataset": {
 								"referenceName": "deltaLake_delays",
 								"type": "DatasetReference",
 								"parameters": {}
-							}
-						]
+							},
+							"firstRowOnly": false
+						}
 					}
 				],
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
-				"parameters": {
-					"name": {
-						"type": "string",
-						"defaultValue": "test"
-					}
-				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureDatabricksLinkedService')]",
-				"[concat(variables('factoryId'), '/datasets/deltaLake_delays')]",
 				"[concat(variables('factoryId'), '/datasets/codes_raw')]",
 				"[concat(variables('factoryId'), '/datasets/deltaLake_codes')]",
 				"[concat(variables('factoryId'), '/datasets/delays_raw')]",
+				"[concat(variables('factoryId'), '/datasets/deltaLake_delays')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureDatabricksLinkedService')]",
 				"[concat(variables('factoryId'), '/datasets/deltaLake_avgDelays')]",
 				"[concat(variables('factoryId'), '/datasets/outputTable_csv')]"
 			]
@@ -651,7 +663,8 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> codes",
+						"     format: 'parquet',",
+						"     partitionBy('hash', 1)) ~> codes",
 						"source(output(",
 						"          date as integer,",
 						"          delay as integer,",
@@ -662,7 +675,8 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> delays",
+						"     format: 'parquet',",
+						"     partitionBy('hash', 1)) ~> delays",
 						"codes, delays join(IATA == origin,",
 						"     joinType:'left',",
 						"     matchType:'exact',",
