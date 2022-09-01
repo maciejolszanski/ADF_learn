@@ -3,9 +3,101 @@
 	"properties": {
 		"activities": [
 			{
+				"name": "Copy codes",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": false,
+							"wildcardFileName": "*.parquet",
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "AzureDatabricksDeltaLakeSink",
+						"importSettings": {
+							"type": "AzureDatabricksDeltaLakeImportCommand"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "codes_raw",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "deltaLake_codes",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy delays",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": false,
+							"wildcardFileName": "*.parquet",
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "AzureDatabricksDeltaLakeSink",
+						"importSettings": {
+							"type": "AzureDatabricksDeltaLakeImportCommand"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "delays_raw",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "deltaLake_delays",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
 				"name": "join",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
+					{
+						"activity": "Copy delays",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
 					{
 						"activity": "Copy codes",
 						"dependencyConditions": [
@@ -22,13 +114,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/Users/olszanskimaciej@wp.pl/adf_pipeline",
-					"baseParameters": {
-						"input": {
-							"value": "@pipeline().parameters.name",
-							"type": "Expression"
-						}
-					}
+					"notebookPath": "/Users/olszanskimaciej@wp.pl/adf_pipeline"
 				},
 				"linkedServiceName": {
 					"referenceName": "AzureDatabricksLinkedService",
@@ -36,39 +122,8 @@
 				}
 			},
 			{
-				"name": "Lookup1",
-				"type": "Lookup",
-				"dependsOn": [
-					{
-						"activity": "join",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "AzureDatabricksDeltaLakeSource",
-						"query": "SELECT COUNT(*) FROM avg_delays"
-					},
-					"dataset": {
-						"referenceName": "deltaLake_delays",
-						"type": "DatasetReference"
-					},
-					"firstRowOnly": false
-				}
-			},
-			{
 				"name": "If Condition1",
-				"description": "@activity('Lookup 1').output >1",
+				"description": "",
 				"type": "IfCondition",
 				"dependsOn": [
 					{
@@ -81,7 +136,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@activity('Lookup1').output >1",
+						"value": "@greaterOrEquals(activity('Lookup1').output,1)",
 						"type": "Expression"
 					},
 					"ifTrueActivities": [
@@ -134,11 +189,11 @@
 				}
 			},
 			{
-				"name": "Copy codes",
-				"type": "Copy",
+				"name": "Lookup1",
+				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "Copy delays",
+						"activity": "join",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -154,85 +209,17 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "ParquetSource",
-						"storeSettings": {
-							"type": "AzureBlobFSReadSettings",
-							"recursive": false,
-							"wildcardFileName": "*",
-							"enablePartitionDiscovery": false
-						}
+						"type": "AzureDatabricksDeltaLakeSource",
+						"query": "SELECT COUNT(*) FROM codes"
 					},
-					"sink": {
-						"type": "AzureDatabricksDeltaLakeSink",
-						"importSettings": {
-							"type": "AzureDatabricksDeltaLakeImportCommand"
-						}
-					},
-					"enableStaging": false
-				},
-				"inputs": [
-					{
-						"referenceName": "codes_raw",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "deltaLake_codes",
-						"type": "DatasetReference"
-					}
-				]
-			},
-			{
-				"name": "Copy delays",
-				"type": "Copy",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "ParquetSource",
-						"storeSettings": {
-							"type": "AzureBlobFSReadSettings",
-							"recursive": false,
-							"wildcardFileName": "*",
-							"enablePartitionDiscovery": false
-						}
-					},
-					"sink": {
-						"type": "AzureDatabricksDeltaLakeSink",
-						"importSettings": {
-							"type": "AzureDatabricksDeltaLakeImportCommand"
-						}
-					},
-					"enableStaging": false
-				},
-				"inputs": [
-					{
-						"referenceName": "delays_raw",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
+					"dataset": {
 						"referenceName": "deltaLake_delays",
 						"type": "DatasetReference"
-					}
-				]
+					},
+					"firstRowOnly": false
+				}
 			}
 		],
-		"parameters": {
-			"name": {
-				"type": "string",
-				"defaultValue": "test"
-			}
-		},
 		"annotations": []
 	}
 }
