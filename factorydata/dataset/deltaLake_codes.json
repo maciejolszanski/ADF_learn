@@ -1,0 +1,16 @@
+{
+	"name": "deltaLake_codes",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DeltaLakeLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureDatabricksDeltaLakeDataset",
+		"typeProperties": {
+			"database": "flights",
+			"table": "codes"
+		},
+		"schema": []
+	}
+}

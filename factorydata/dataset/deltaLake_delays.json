@@ -1,0 +1,16 @@
+{
+	"name": "deltaLake_delays",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DeltaLakeLinkedService",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureDatabricksDeltaLakeDataset",
+		"typeProperties": {
+			"database": "flights",
+			"table": "delays"
+		},
+		"schema": []
+	}
+}
