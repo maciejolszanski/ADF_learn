@@ -157,7 +157,8 @@
 						"type": "ParquetSource",
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
-							"recursive": true,
+							"recursive": false,
+							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
 						}
 					},
@@ -199,7 +200,8 @@
 						"type": "ParquetSource",
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
-							"recursive": true,
+							"recursive": false,
+							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
 						}
 					},
