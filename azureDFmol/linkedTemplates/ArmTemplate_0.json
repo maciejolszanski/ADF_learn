@@ -326,7 +326,6 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": "dataflow.csv",
 						"folderPath": "outputData/",
 						"fileSystem": "data"
 					},
@@ -672,7 +671,7 @@
 						"join1 aggregate(groupBy(State),",
 						"     avgDelays = avg(delay)) ~> aggregate1",
 						"aggregate1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
+						"     validateSchema: true,",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
