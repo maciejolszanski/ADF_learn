@@ -10,7 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "rawData/codes",
+				"fileName": "codes",
+				"folderPath": "rawData",
 				"fileSystem": "data"
 			},
 			"compressionCodec": "snappy"

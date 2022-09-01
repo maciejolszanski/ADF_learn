@@ -86,7 +86,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@activity('Lookup 1').output >1",
+						"value": "@activity('Lookup1').output >1",
 						"type": "Expression"
 					},
 					"ifTrueActivities": [
@@ -117,7 +117,7 @@
 									"formatSettings": {
 										"type": "DelimitedTextWriteSettings",
 										"quoteAllText": true,
-										"fileExtension": ".txt"
+										"fileExtension": ".csv"
 									}
 								},
 								"enableStaging": false
