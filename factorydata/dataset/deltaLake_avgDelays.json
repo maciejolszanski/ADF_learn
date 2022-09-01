@@ -1,5 +1,5 @@
 {
-	"name": "deltaLake_delays",
+	"name": "deltaLake_avgDelays",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "DeltaLakeLinkedService",
@@ -9,28 +9,16 @@
 		"type": "AzureDatabricksDeltaLakeDataset",
 		"typeProperties": {
 			"database": "flights",
-			"table": "delays"
+			"table": "avg_delays"
 		},
 		"schema": [
 			{
-				"name": "Date",
-				"type": "integer"
-			},
-			{
-				"name": "Delay",
-				"type": "integer"
-			},
-			{
-				"name": "Distance",
-				"type": "integer"
-			},
-			{
-				"name": "Origin",
+				"name": "State",
 				"type": "string"
 			},
 			{
-				"name": "Destination",
-				"type": "string"
+				"name": "AverageDelay",
+				"type": "double"
 			}
 		]
 	}

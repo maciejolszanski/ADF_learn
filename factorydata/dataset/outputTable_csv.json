@@ -1,5 +1,5 @@
 {
-	"name": "OutputTable_csv",
+	"name": "outputTable_csv",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureStorageLinkedService",

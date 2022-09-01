@@ -11,6 +11,23 @@
 			"database": "flights",
 			"table": "codes"
 		},
-		"schema": []
+		"schema": [
+			{
+				"name": "City",
+				"type": "string"
+			},
+			{
+				"name": "State",
+				"type": "string"
+			},
+			{
+				"name": "Country",
+				"type": "string"
+			},
+			{
+				"name": "IATA",
+				"type": "string"
+			}
+		]
 	}
 }
