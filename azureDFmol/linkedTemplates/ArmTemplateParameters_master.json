@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "azureDFmol"
 		},
+		"AzureDataLakeDeltaLakeLinkedService_accountKey": {
+			"value": ""
+		},
 		"AzureDatabricksLinkedService_accessToken": {
 			"value": ""
 		},
@@ -13,6 +16,9 @@
 		},
 		"DeltaLakeLinkedService_accessToken": {
 			"value": ""
+		},
+		"AzureDataLakeDeltaLakeLinkedService_properties_typeProperties_url": {
+			"value": "https://deltalakestoragemol.dfs.core.windows.net/"
 		},
 		"AzureDatabricksLinkedService_properties_typeProperties_existingClusterId": {
 			"value": "0831-104038-88q0a2qf"
