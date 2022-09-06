@@ -1,0 +1,12 @@
+{
+	"name": "sqlDBLinkedService",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=sqlserver-mol.database.windows.net;initial catalog=sqlDB-mol;user id=maciejol",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDMwRTE1MTlCLTVEQUItNEFDRC04RUQ1LTdBRjI0QjRBQUM1N19lZDM1ZDNmMy00NWIxLTQ3MjMtYjhlYi1kOTg1MGU0NzQyNTciDQp9"
+		}
+	}
+}
