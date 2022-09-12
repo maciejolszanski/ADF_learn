@@ -17,6 +17,9 @@
 		"DeltaLakeLinkedService_accessToken": {
 			"value": ""
 		},
+		"sqlDBLinkedService_connectionString": {
+			"value": ""
+		},
 		"AzureDataLakeDeltaLakeLinkedService_properties_typeProperties_url": {
 			"value": "https://deltalakestoragemol.dfs.core.windows.net/"
 		},

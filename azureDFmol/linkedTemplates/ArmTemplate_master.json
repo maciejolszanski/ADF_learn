@@ -23,6 +23,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'DeltaLakeLinkedService'"
 		},
+		"sqlDBLinkedService_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'sqlDBLinkedService'"
+		},
 		"AzureDataLakeDeltaLakeLinkedService_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://deltalakestoragemol.dfs.core.windows.net/"
@@ -73,6 +77,9 @@
 					},
 					"DeltaLakeLinkedService_accessToken": {
 						"value": "[parameters('DeltaLakeLinkedService_accessToken')]"
+					},
+					"sqlDBLinkedService_connectionString": {
+						"value": "[parameters('sqlDBLinkedService_connectionString')]"
 					},
 					"AzureDataLakeDeltaLakeLinkedService_properties_typeProperties_url": {
 						"value": "[parameters('AzureDataLakeDeltaLakeLinkedService_properties_typeProperties_url')]"
